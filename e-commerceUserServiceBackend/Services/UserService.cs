@@ -1,4 +1,5 @@
-﻿using e_commerceUserServiceBackend.Models;
+﻿using e_commerceUserServiceBackend.DTO;
+using e_commerceUserServiceBackend.Models;
 using e_commerceUserServiceBackend.Repositories;
 
 namespace e_commerceUserServiceBackend.Services
@@ -11,6 +12,13 @@ namespace e_commerceUserServiceBackend.Services
         {
             _userRepository = userRepository;
         }
+
+        public async Task<string?> UserLogin(UserDTO user)
+        {
+            var msg = await _userRepository.UserLogin(user);
+            return msg;
+        }
+
         public async Task<string?> UserSignUp( User user)
         {
             var msg = await _userRepository.UserSignUp(user);
