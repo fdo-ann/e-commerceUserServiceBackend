@@ -38,7 +38,7 @@ namespace e_commerceUserServiceBackend.Controllers
             if (msg == null)
                 return NotFound(new { message = "User not found" });
 
-            return Ok(msg);
+            return Ok(new { Message = msg });
         }
     }
         
