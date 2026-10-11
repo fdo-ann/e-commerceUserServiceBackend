@@ -30,7 +30,7 @@ namespace e_commerceUserServiceBackend.Helpers
             return Convert.ToBase64String(hashBytes);
         }
 
-
+        // this function returns true if the password matches
         public static bool VerifyPassword(string password, string base64Hash)
         {
             byte[] hashBytes;

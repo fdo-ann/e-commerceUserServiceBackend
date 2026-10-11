@@ -15,11 +15,14 @@ namespace e_commerceUserServiceBackend.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<string?> UserLogin(UserDTO user)
+        public async Task<string?> UserLogin(UserDTO userObj)
         {
-            var users = await _dbContext.Users.FirstOrDefaultAsync(x=> x.Username == user.Username && x.Password == user.Password);
-            if (users == null)
+            //var users = await _dbContext.Users.FirstOrDefaultAsync(x=> x.Username == user.Username && x.Password == user.Password);
+            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Username == userObj.Username);
+            if (user == null)
                 return null;
+            if (!PasswordHasher.VerifyPassword(userObj.Password, user.Password))
+                return "Incorrect password entered";
             return "User Logged in successfully";
         }
 

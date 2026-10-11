@@ -40,8 +40,9 @@ namespace e_commerceUserServiceBackend.Controllers
             var msg =await _userService.UserLogin(user);
             if (msg == null)
                 return NotFound(new { message = "User not found" });
-
-            return Ok(new { Message = msg });
+            if (msg == "User Logged in successfully")
+                return Ok(new { Message = msg });
+            return BadRequest(new { Message = msg });
         }
     }
         
