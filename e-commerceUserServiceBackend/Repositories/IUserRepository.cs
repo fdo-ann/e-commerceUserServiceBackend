@@ -7,5 +7,6 @@ namespace e_commerceUserServiceBackend.Repositories
     {
         Task<string?> UserSignUp(User user);
         Task<string?> UserLogin(UserDTO user);
+
     }
 }

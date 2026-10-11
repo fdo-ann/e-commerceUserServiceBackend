@@ -26,7 +26,10 @@ namespace e_commerceUserServiceBackend.Controllers
         public async Task<IActionResult> userSignUp(User user)
         {
             var msg = await _userService.UserSignUp(user);
-            return Ok( new { Message =msg});
+            if (msg == "User Registerd Successfully")
+                return Ok(new { Message = msg });
+            
+            return BadRequest( new { Message =msg});
             //return Ok(new { Message = "User Registered!" });
         }
 
