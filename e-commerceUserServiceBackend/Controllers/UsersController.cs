@@ -22,27 +22,52 @@ namespace e_commerceUserServiceBackend.Controllers
             return Ok("Hello from backEnd");
         }
 
+
+        //[HttpPost("register")]
+        //public async Task<IActionResult> userSignUp(User user)
+        //{
+        //    var msg = await _userService.UserSignUp(user);
+        //    if (msg == "User Registerd Successfully")
+        //        return Ok(new { Message = msg });
+
+        //    return BadRequest(new { Message = msg });
+        //    //return Ok(new { Message = "User Registered!" });
+        //}
+
+        //after token
+
         [HttpPost ("register")]
         public async Task<IActionResult> userSignUp(User user)
         {
-            var msg = await _userService.UserSignUp(user);
-            if (msg == "User Registerd Successfully")
-                return Ok(new { Message = msg });
+            var res = await _userService.UserSignUp(user);
+            if (!res.Successs)
+               return BadRequest(res);
             
-            return BadRequest( new { Message =msg});
+            return Ok( res);
             //return Ok(new { Message = "User Registered!" });
         }
+
+        //public async Task<IActionResult> userLogin(UserDTO user)
+        //{
+        //    var msg = await _userService.UserLogin(user);
+        //    if (msg == null)
+        //        return NotFound(new { message = "User not found" });
+        //    if (msg == "User Logged in successfully")
+        //        return Ok(new { Message = msg });
+        //    return BadRequest(new { Message = msg });
+        //}
+
+        //after token
 
         [HttpPost("login")]
 
         public async Task<IActionResult> userLogin(UserDTO user)
         {
-            var msg =await _userService.UserLogin(user);
-            if (msg == null)
-                return NotFound(new { message = "User not found" });
-            if (msg == "User Logged in successfully")
-                return Ok(new { Message = msg });
-            return BadRequest(new { Message = msg });
+            var res =await _userService.UserLogin(user);
+            if (!res.Successs)
+                return BadRequest(res);
+
+            return Ok(res);
         }
     }
         

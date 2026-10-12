@@ -15,19 +15,25 @@ namespace e_commerceUserServiceBackend.Services
             _userRepository = userRepository;
         }
 
-        public async Task<string?> UserLogin(UserDTO user)
+        public async Task<ApiResponseDTO?> UserLogin(UserDTO user)
         {
-            var msg = await _userRepository.UserLogin(user);
-            return msg;
+            var res = await _userRepository.UserLogin(user);
+            return res;
         }
 
-        public async Task<string?> UserSignUp( User user)
+        public async Task<ApiResponseDTO?> UserSignUp( User user)
         {
+            ApiResponseDTO? res = new ApiResponseDTO();
             var passMessage = CheckPasswordStrength(user.Password);
             if (!string.IsNullOrEmpty(passMessage))
-                return passMessage;
-            var msg = await _userRepository.UserSignUp(user);
-            return msg;
+            {
+                res.Successs = false;
+                res.Msg = passMessage;
+                return res;
+            }
+               
+            res = await _userRepository.UserSignUp(user);
+            return res;
         }
 
         private string CheckPasswordStrength(string password)

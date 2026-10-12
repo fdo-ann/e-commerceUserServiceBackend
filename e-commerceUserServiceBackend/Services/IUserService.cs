@@ -5,7 +5,7 @@ namespace e_commerceUserServiceBackend.Services
 {
     public interface IUserService
     {
-        Task <string?> UserSignUp(User user);
-        Task<string?> UserLogin(UserDTO user);
+        Task <ApiResponseDTO?> UserSignUp(User user);
+        Task<ApiResponseDTO?> UserLogin(UserDTO user);
     }
 }

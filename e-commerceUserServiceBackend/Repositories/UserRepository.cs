@@ -15,29 +15,74 @@ namespace e_commerceUserServiceBackend.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<string?> UserLogin(UserDTO userObj)
+        //public async Task<string?> UserLogin(UserDTO userObj)
+        //{
+        //    //var users = await _dbContext.Users.FirstOrDefaultAsync(x=> x.Username == user.Username && x.Password == user.Password);
+        //    var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Username == userObj.Username);
+        //    if (user == null)
+        //        return null;
+        //    if (!PasswordHasher.VerifyPassword(userObj.Password, user.Password))
+        //        return "Incorrect password entered";
+        //    return "User Logged in successfully";
+        //}
+
+        //after token passing
+        public async Task<ApiResponseDTO?> UserLogin(UserDTO userObj)
         {
             //var users = await _dbContext.Users.FirstOrDefaultAsync(x=> x.Username == user.Username && x.Password == user.Password);
+            ApiResponseDTO res = new ApiResponseDTO();
             var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Username == userObj.Username);
-            if (user == null)
-                return null;
+            if (user == null) {
+                res.Successs = false;
+                return res;
+            }
             if (!PasswordHasher.VerifyPassword(userObj.Password, user.Password))
-                return "Incorrect password entered";
-            return "User Logged in successfully";
+            {
+                res.Successs = false;
+                res.Msg = "Incorrect password entered";
+                return res;
+            }
+            res.Msg = "User Logged in successfully";
+            return res;
         }
 
-        public async Task<string> UserSignUp( User user)
+        //public async Task<string> UserSignUp( User user)
+        //{
+        //    user.Password = PasswordHasher.HashPassword(user.Password);
+        //    // checks userName already exists
+        //    if (await CheckUserNameExistAsync(user.Username))
+        //        return "UserName already exists";
+        //    if (await CheckUserEmailExistAsync(user.Email))
+        //        return "User email already exists";
+        //    _dbContext.Users.Add(user);
+        //    await _dbContext.SaveChangesAsync();
+        //    //return user;
+        //    return "User Registerd Successfully";
+        //}
+
+        //after token passing
+        public async Task<ApiResponseDTO> UserSignUp(User user)
         {
+            ApiResponseDTO res = new ApiResponseDTO();
             user.Password = PasswordHasher.HashPassword(user.Password);
             // checks userName already exists
             if (await CheckUserNameExistAsync(user.Username))
-                return "UserName already exists";
+            {
+                res.Successs = false;
+                res.Msg = "Username already exists";
+                return res;
+            }
             if (await CheckUserEmailExistAsync(user.Email))
-                return "User email already exists";
+            {
+                res.Successs = false;
+                res.Msg = "User email already exists";
+                return res;
+            }
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
             //return user;
-            return "User Registerd Successfully";
+            res.Msg = "User Registerd Successfully";
+            return res;
         }
 
         //private async Task<bool> CheckUserNameExistAsync(string userName)

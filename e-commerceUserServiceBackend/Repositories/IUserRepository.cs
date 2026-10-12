@@ -5,8 +5,8 @@ namespace e_commerceUserServiceBackend.Repositories
 {
     public interface IUserRepository
     {
-        Task<string?> UserSignUp(User user);
-        Task<string?> UserLogin(UserDTO user);
+        Task<ApiResponseDTO?> UserSignUp(User user);
+        Task<ApiResponseDTO?> UserLogin(UserDTO user);
 
     }
 }
