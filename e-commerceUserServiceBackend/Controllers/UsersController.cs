@@ -69,6 +69,13 @@ namespace e_commerceUserServiceBackend.Controllers
 
             return Ok(res);
         }
+
+        [HttpGet("get-users")]
+        public async Task<ActionResult<User>> GetAllUsers()
+        {
+            var users = await _userService.GetAllUsers();
+            return Ok(users);
+        }
     }
         
     

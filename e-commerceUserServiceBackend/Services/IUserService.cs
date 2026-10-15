@@ -7,5 +7,6 @@ namespace e_commerceUserServiceBackend.Services
     {
         Task <ApiResponseDTO?> UserSignUp(User user);
         Task<ApiResponseDTO?> UserLogin(UserDTO user);
+        Task<List<User>> GetAllUsers();
     }
 }

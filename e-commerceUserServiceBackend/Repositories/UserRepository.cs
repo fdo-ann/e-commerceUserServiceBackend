@@ -4,6 +4,10 @@ using e_commerceUserServiceBackend.Helpers;
 using e_commerceUserServiceBackend.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace e_commerceUserServiceBackend.Repositories
 {
@@ -42,7 +46,12 @@ namespace e_commerceUserServiceBackend.Repositories
                 res.Msg = "Incorrect password entered";
                 return res;
             }
+            // Generate JWT Token upon successful authentication
+            user.Token = CreateJwtToken(user);
+
+            res.Token = user.Token;
             res.Msg = "User Logged in successfully";
+
             return res;
         }
 
@@ -85,6 +94,12 @@ namespace e_commerceUserServiceBackend.Repositories
             return res;
         }
 
+        public async Task<List<User>> GetAllUsers()
+        {
+            var users = await _dbContext.Users.ToListAsync();
+            return users;
+        }
+
         //private async Task<bool> CheckUserNameExistAsync(string userName)
         //{
         //    var userNameExist = await _dbContext.Users.AnyAsync(x=>x.Username == userName);
@@ -95,5 +110,34 @@ namespace e_commerceUserServiceBackend.Repositories
             await _dbContext.Users.AnyAsync(x => x.Username == userName);
         private async Task<bool> CheckUserEmailExistAsync(string email) =>
            await _dbContext.Users.AnyAsync(x => x.Email == email);
+
+
+        private string CreateJwtToken(User user)
+        {
+            var jwtTokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes("MySuperSecretKeyForJwtToken123456!");
+
+            //Token payload
+            var identity = new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.Role, user.Role ?? "User"),
+                new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}")
+            });
+            //Token signature
+            var credentials = new SigningCredentials(
+                new SymmetricSecurityKey(key),
+                SecurityAlgorithms.HmacSha256
+            );
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = identity,
+                Expires = DateTime.Now.AddDays(1),
+                SigningCredentials = credentials
+            };
+
+            var token = jwtTokenHandler.CreateToken(tokenDescriptor);
+            return jwtTokenHandler.WriteToken(token);
+        }
     }
 }

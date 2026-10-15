@@ -1,6 +1,9 @@
 ﻿using e_commerceUserServiceBackend.DTO;
 using e_commerceUserServiceBackend.Models;
 using e_commerceUserServiceBackend.Repositories;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -18,6 +21,7 @@ namespace e_commerceUserServiceBackend.Services
         public async Task<ApiResponseDTO?> UserLogin(UserDTO user)
         {
             var res = await _userRepository.UserLogin(user);
+            // Generate JWT Token upon successful authentication
             return res;
         }
 
@@ -34,6 +38,12 @@ namespace e_commerceUserServiceBackend.Services
                
             res = await _userRepository.UserSignUp(user);
             return res;
+        }
+
+        public async Task<List<User>> GetAllUsers()
+        {
+            var users = await _userRepository.GetAllUsers();
+            return users;
         }
 
         private string CheckPasswordStrength(string password)
