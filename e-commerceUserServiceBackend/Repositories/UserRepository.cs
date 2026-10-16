@@ -132,10 +132,10 @@ namespace e_commerceUserServiceBackend.Repositories
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = identity,
-                Expires = DateTime.Now.AddDays(1),
+                //Expires = DateTime.Now.AddDays(1),
+                Expires = DateTime.Now.AddSeconds(25),
                 SigningCredentials = credentials
             };
-
             var token = jwtTokenHandler.CreateToken(tokenDescriptor);
             return jwtTokenHandler.WriteToken(token);
         }

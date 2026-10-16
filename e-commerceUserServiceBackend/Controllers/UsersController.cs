@@ -1,6 +1,7 @@
 ﻿using e_commerceUserServiceBackend.DTO;
 using e_commerceUserServiceBackend.Models;
 using e_commerceUserServiceBackend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -70,6 +71,7 @@ namespace e_commerceUserServiceBackend.Controllers
             return Ok(res);
         }
 
+        [Authorize]
         [HttpGet("get-users")]
         public async Task<ActionResult<User>> GetAllUsers()
         {
