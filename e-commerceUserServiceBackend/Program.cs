@@ -25,10 +25,20 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddDbContext<AppDbContext>( options =>
+
+string connectionStringTemplate = builder.Configuration.GetConnectionString("SqlServerConnStr")!;
+string connectionString = connectionStringTemplate.Replace("$MS_SQL_HOST", Environment.GetEnvironmentVariable("MS_SQL_HOST"))
+    .Replace("$SQL_PASSWORD", Environment.GetEnvironmentVariable("SQL_PASSWORD"));
+
+builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnStr"));
+    options.UseSqlServer(connectionString);
 });
+
+//builder.Services.AddDbContext<AppDbContext>( options =>
+//{
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnStr"));
+//});
 
 // Configure JWT Authentication Scheme
 builder.Services.AddAuthentication(x =>
