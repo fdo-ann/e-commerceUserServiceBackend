@@ -1,0 +1,67 @@
+﻿using e_commerceUserServiceBackend.DTO;
+using e_commerceUserServiceBackend.Models;
+using e_commerceUserServiceBackend.Repositories;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using System.Text.RegularExpressions;
+
+namespace e_commerceUserServiceBackend.Services
+{
+    public class UserService : IUserService
+    {
+        private readonly IUserRepository _userRepository;
+
+        public UserService(IUserRepository userRepository)
+        {
+            _userRepository = userRepository;
+        }
+
+        public async Task<ApiResponseDTO?> UserLogin(UserDTO user)
+        {
+            var res = await _userRepository.UserLogin(user);
+            // Generate JWT Token upon successful authentication
+            return res;
+        }
+
+        public async Task<ApiResponseDTO?> UserSignUp( User user)
+        {
+            ApiResponseDTO? res = new ApiResponseDTO();
+            var passMessage = CheckPasswordStrength(user.Password);
+            if (!string.IsNullOrEmpty(passMessage))
+            {
+                res.Successs = false;
+                res.Msg = passMessage;
+                return res;
+            }
+               
+            res = await _userRepository.UserSignUp(user);
+            return res;
+        }
+
+        public async Task<List<User>> GetAllUsers()
+        {
+            var users = await _userRepository.GetAllUsers();
+            return users;
+        }
+
+        private string CheckPasswordStrength(string password)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (password.Length < 7)
+                sb.Append("Minimum password length should be 7" + Environment.NewLine);
+
+            if (!(Regex.IsMatch(password, "[a-z]") && Regex.IsMatch(password, "[A-Z]") && Regex.IsMatch(password, "[0-9]")))
+                sb.Append("Password should be alphanumeric" + Environment.NewLine);
+
+            if (!Regex.IsMatch(password, @"[<>,@!#$%^&*()_+={}\[\]:;""'|\\?/~`-]"))
+            {
+                sb.Append("Password should contain special chars" + Environment.NewLine);
+            }
+
+            return sb.ToString();
+        }
+
+    }
+}

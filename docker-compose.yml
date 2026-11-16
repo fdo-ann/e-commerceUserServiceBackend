@@ -1,0 +1,6 @@
+services:
+  e-commerceuserservicebackend:
+    image: ${DOCKER_REGISTRY-}ecommerceuserservicebackend
+    build:
+      context: .
+      dockerfile: e-commerceUserServiceBackend/Dockerfile
